@@ -116,10 +116,9 @@ public class StreamingJava {
         Stream<String> streamE = Stream.of("a", "b", "a", "c", "b", "a", "d");
         System.out.println("Test e (count=2): " + findOfCount(streamE, 2));
 
-        // Test f
-        String[] testF = "Hello World".split(" ");
-        System.out.print("Test f (makeStreamOf): ");
-        makeStreamOf(testF).forEach(c -> System.out.print((char) c + " "));
+        // Test f Erwartet: H e l l o W o r l d
+        String[] test = "Hello World".split(" ");
+        makeStreamOf(test).forEach(c -> System.out.print((char) c + " "));
         System.out.println();
     }
 }
