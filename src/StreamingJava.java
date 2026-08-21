@@ -3,9 +3,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -40,8 +42,12 @@ public class StreamingJava {
 
     // Aufgabe 2) e)
     public static <E> Set<E> findOfCount(Stream<E> stream, int count) {
-        // TODO
-        return null;
+        return stream.collect(Collectors.groupingBy(e -> e, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue() == count)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
     }
 
     // Aufgabe 2) f)
@@ -100,5 +106,9 @@ public class StreamingJava {
         List<List<Integer>> listCEmpty = List.of(List.of());
         System.out.println("Test c: " + minOf(listC));
         //System.out.println("Test c empty: " + minOf(listCEmpty));
+
+        // Test e
+        Stream<String> streamE = Stream.of("a", "b", "a", "c", "b", "a", "d");
+        System.out.println("Test e (count=3): " + findOfCount(streamE, 3)); // Should print [b]
     }
 }
