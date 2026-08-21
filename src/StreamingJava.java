@@ -1,23 +1,22 @@
 
-import java.io.*;
-import java.nio.file.*;
-import java.time.*;
-import java.time.format.*;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class StreamingJava {
 
     // Aufgabe 2) a)
     public static <E> Stream<E> flatStreamOf(List<List<E>> list) {
-        // TODO
-        return null;
+        return list.stream().flatMap(List::stream);
     }
 
     // Aufgabe 2) b)
     public static int bitsOf(IntStream stream) {
-        // TODO
+        // TODO‚
         return 0;
     }
 
@@ -46,7 +45,6 @@ public class StreamingJava {
     }
 
 //-------------------------------------------------------------------------------------------------
-
     // Aufgabe 3) a)
     public static Stream<String> fileLines(String path) throws IOException {
         // TODO
@@ -67,16 +65,12 @@ public class StreamingJava {
 
     // Aufgabe 3) d)
     // TODO
-
     // Aufgabe 3) e)
     // TODO
-
     // Aufgabe 3) f)
     // TODO
-
     // Aufgabe 3) g)
     // TODO
-
     // Aufgabe 3) h)
     public static Stream<File> findFilesWith(String dir, String st, String ed, int maxFiles) throws IOException {
         // TODO
@@ -85,5 +79,7 @@ public class StreamingJava {
 
     public static void main(String[] args) throws Exception {
         // TODO
+        List<List<Integer>> list = List.of(List.of(1, 2, 3), List.of(4, 5, 6), List.of(7, 8, 9));
+        System.out.println(flatStreamOf(list).toList());
     }
 }
