@@ -1,6 +1,7 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,9 @@ public class StreamingJava {
     // Aufgabe 2) d)
     public static <E> E lastWithOf(Stream<E> stream, Predicate<? super E> predicate) {
         // TODO
-        return null;
+        return stream.filter(predicate)
+                .reduce((first, second) -> second)
+                .orElse(null);
     }
 
     // Aufgabe 2) e)
@@ -53,10 +56,11 @@ public class StreamingJava {
     // Aufgabe 2) f)
     public static IntStream makeStreamOf(String[] strings) {
         // TODO
-        return null;
+        return Arrays.stream(strings)
+                .flatMapToInt(String::chars);
     }
 
-//-------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------
     // Aufgabe 3) a)
     public static Stream<String> fileLines(String path) throws IOException {
         // TODO
@@ -90,7 +94,6 @@ public class StreamingJava {
     }
 
     public static void main(String[] args) throws Exception {
-        // TODO
         // Test a
         List<List<Integer>> listA = List.of(List.of(1, 2, 3), List.of(4, 5, 6), List.of(7, 8, 9));
         System.out.println("Test a: " + flatStreamOf(listA).toList());
@@ -99,16 +102,24 @@ public class StreamingJava {
         IntStream stream = IntStream.of(1, 2, 3, 4, 5);
         IntStream streamEmpty = IntStream.of();
         System.out.println("Test b: " + bitsOf(stream));
-        System.out.println("Test b empty:" + bitsOf(streamEmpty));
+        System.out.println("Test b empty: " + bitsOf(streamEmpty));
 
         // Test c
         List<List<Integer>> listC = List.of(List.of(10, 2, 3), List.of(4, 5, 6), List.of(7, 8, 9));
-        List<List<Integer>> listCEmpty = List.of(List.of());
         System.out.println("Test c: " + minOf(listC));
-        //System.out.println("Test c empty: " + minOf(listCEmpty));
+
+        // Test d
+        Stream<Integer> numbers = Stream.of(1, 2, 3, 4, 5, 6);
+        System.out.println("Test d (lastWithOf): " + lastWithOf(numbers, n -> n % 2 == 0));
 
         // Test e
         Stream<String> streamE = Stream.of("a", "b", "a", "c", "b", "a", "d");
-        System.out.println("Test e (count=3): " + findOfCount(streamE, 3)); // Should print [b]
+        System.out.println("Test e (count=2): " + findOfCount(streamE, 2));
+
+        // Test f
+        String[] testF = "Hello World".split(" ");
+        System.out.print("Test f (makeStreamOf): ");
+        makeStreamOf(testF).forEach(c -> System.out.print((char) c + " "));
+        System.out.println();
     }
 }
