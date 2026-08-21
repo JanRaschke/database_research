@@ -106,7 +106,9 @@ public class StreamingJava {
 
         // Test c
         List<List<Integer>> listC = List.of(List.of(10, 2, 3), List.of(4, 5, 6), List.of(7, 8, 9));
+        List<List<Integer>> listCEmpty = List.of(List.of());
         System.out.println("Test c: " + minOf(listC));
+        //System.out.println("Test c empty: " + minOf(listCEmpty));
 
         // Test d
         Stream<Integer> numbers = Stream.of(1, 2, 3, 4, 5, 6);
