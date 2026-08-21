@@ -84,7 +84,7 @@ public class StreamingJava {
 
     // Aufgabe 3) b)
     public static double averageCost(Stream<String> lines) {
-        return lines.mapToDouble(line -> Double.parseDouble(line.split(",", -1)[12].trim()))
+        return lines.mapToDouble(line -> Double.parseDouble(line.split(",")[12]))
                 .average()
                 .orElse(0.0);
     }
