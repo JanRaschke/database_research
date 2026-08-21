@@ -1,6 +1,9 @@
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -45,6 +48,7 @@ public class StreamingJava {
 
     // Aufgabe 2) e)
     public static <E> Set<E> findOfCount(Stream<E> stream, int count) {
+        // TODO
         return stream.collect(Collectors.groupingBy(e -> e, Collectors.counting()))
                 .entrySet()
                 .stream()
@@ -63,14 +67,24 @@ public class StreamingJava {
     // -------------------------------------------------------------------------------------------------
     // Aufgabe 3) a)
     public static Stream<String> fileLines(String path) throws IOException {
-        // TODO
-        return null;
+        BufferedReader reader = Files.newBufferedReader(Path.of(path));
+        return reader.lines()
+                     .skip(1)
+                     .onClose(() -> {
+                         try {
+                             reader.close();
+                             System.out.println("BufferedReader erfolgreich geschlossen.");
+                         } catch (IOException e) {
+                             throw new RuntimeException(e);
+                         }
+                     });
     }
 
     // Aufgabe 3) b)
     public static double averageCost(Stream<String> lines) {
-        // TODO
-        return 0d;
+        return lines.mapToDouble(line -> Double.parseDouble(line.split(",")[12].trim()))
+                    .average()
+                    .orElse(0.0);
     }
 
     // Aufgabe 3) c)
@@ -118,9 +132,13 @@ public class StreamingJava {
         Stream<String> streamE = Stream.of("a", "b", "a", "c", "b", "a", "d");
         System.out.println("Test e (count=2): " + findOfCount(streamE, 2));
 
-        // Test f Erwartet: H e l l o W o r l d
-        String[] test = "Hello World".split(" ");
-        makeStreamOf(test).forEach(c -> System.out.print((char) c + " "));
-        System.out.println();
+        // Test f
+        String[] strings = "Hello World".split(" ");
+        System.out.println(makeStreamOf(strings));
+
+        // Test 3b) averageCost
+        try (Stream<String> lines = fileLines("NaturalGasBilling.csv")) {
+            System.out.println("Durchschnittskosten (averageCost): " + averageCost(lines));
+        }
     }
 }
