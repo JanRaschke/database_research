@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -90,12 +91,7 @@ public class StreamingJava {
 
     // Aufgabe 3) c)
     public static long countCleanEnergyLevy(Stream<String> lines) {
-        return lines.filter(line -> {
-            String[] parts = line.split(",", -1);
-            if (parts.length <= 10) return true;
-            String val = parts[10].trim();
-            return val.isEmpty() || Double.parseDouble(val) == 0.0;
-        }).count();
+        return 0L;
     }
 
     // Aufgabe 3) d)
@@ -151,11 +147,6 @@ public class StreamingJava {
         // Test 3b
         try (Stream<String> s = fileLines(lines)) {
             System.out.println("Test 3b (averageCost): " + averageCost(s));
-        }
-
-        // Test 3c
-        try (Stream<String> s = fileLines(lines)) {
-            System.out.println("Test 3c (countCleanEnergyLevy): " + countCleanEnergyLevy(s));
         }
     }
 }
