@@ -1,7 +1,7 @@
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -69,28 +69,33 @@ public class StreamingJava {
     public static Stream<String> fileLines(String path) throws IOException {
         BufferedReader reader = Files.newBufferedReader(Path.of(path));
         return reader.lines()
-                     .skip(1)
-                     .onClose(() -> {
-                         try {
-                             reader.close();
-                             System.out.println("BufferedReader erfolgreich geschlossen.");
-                         } catch (IOException e) {
-                             throw new RuntimeException(e);
-                         }
-                     });
+                .skip(1)
+                .sequential()
+                .onClose(() -> {
+                    try {
+                        reader.close();
+                        System.out.println("Reader wurde geschlossen.");
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                });
     }
 
     // Aufgabe 3) b)
     public static double averageCost(Stream<String> lines) {
-        return lines.mapToDouble(line -> Double.parseDouble(line.split(",")[12].trim()))
-                    .average()
-                    .orElse(0.0);
+        return lines.mapToDouble(line -> Double.parseDouble(line.split(",", -1)[12].trim()))
+                .average()
+                .orElse(0.0);
     }
 
     // Aufgabe 3) c)
     public static long countCleanEnergyLevy(Stream<String> lines) {
-        // TODO
-        return 0L;
+        return lines.filter(line -> {
+            String[] parts = line.split(",", -1);
+            if (parts.length <= 10) return true;
+            String val = parts[10].trim();
+            return val.isEmpty() || Double.parseDouble(val) == 0.0;
+        }).count();
     }
 
     // Aufgabe 3) d)
@@ -122,7 +127,6 @@ public class StreamingJava {
         List<List<Integer>> listC = List.of(List.of(10, 2, 3), List.of(4, 5, 6), List.of(7, 8, 9));
         List<List<Integer>> listCEmpty = List.of(List.of());
         System.out.println("Test c: " + minOf(listC));
-        //System.out.println("Test c empty: " + minOf(listCEmpty));
 
         // Test d
         Stream<Integer> numbers = Stream.of(1, 2, 3, 4, 5, 6);
@@ -133,12 +137,25 @@ public class StreamingJava {
         System.out.println("Test e (count=2): " + findOfCount(streamE, 2));
 
         // Test f
-        String[] strings = "Hello World".split(" ");
-        System.out.println(makeStreamOf(strings));
+        String[] test = "Hello World".split(" ");
+        makeStreamOf(test).forEach(c -> System.out.print((char) c + " "));
+        System.out.println();
 
-        // Test 3b) averageCost
-        try (Stream<String> lines = fileLines("NaturalGasBilling.csv")) {
-            System.out.println("Durchschnittskosten (averageCost): " + averageCost(lines));
+        // Test 3a
+        String lines = "NaturalGasBilling.csv";
+        System.out.println("Test 3a:");
+        try (Stream<String> s = fileLines(lines)) {
+            s.limit(3).forEach(System.out::println);
+        }
+
+        // Test 3b
+        try (Stream<String> s = fileLines(lines)) {
+            System.out.println("Test 3b (averageCost): " + averageCost(s));
+        }
+
+        // Test 3c
+        try (Stream<String> s = fileLines(lines)) {
+            System.out.println("Test 3c (countCleanEnergyLevy): " + countCleanEnergyLevy(s));
         }
     }
 }
