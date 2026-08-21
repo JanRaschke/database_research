@@ -1,7 +1,9 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -24,7 +26,10 @@ public class StreamingJava {
     // Aufgabe 2) c)
     public static <E extends Comparable<? super E>> E minOf(List<List<E>> list) {
         // TODO
-        return null;
+        Stream<E> s = list.stream().flatMap(List::stream);
+        Comparator c = Comparator.naturalOrder();
+        Optional<E> min = s.min(c);
+        return min.orElseThrow();
     }
 
     // Aufgabe 2) d)
@@ -80,11 +85,20 @@ public class StreamingJava {
 
     public static void main(String[] args) throws Exception {
         // TODO
-        List<List<Integer>> list = List.of(List.of(1, 2, 3), List.of(4, 5, 6), List.of(7, 8, 9));
-        System.out.println(flatStreamOf(list).toList());
+        // Test a
+        List<List<Integer>> listA = List.of(List.of(1, 2, 3), List.of(4, 5, 6), List.of(7, 8, 9));
+        System.out.println("Test a: " + flatStreamOf(listA).toList());
+
+        // Test b
         IntStream stream = IntStream.of(1, 2, 3, 4, 5);
         IntStream streamEmpty = IntStream.of();
-        System.out.println(bitsOf(stream));
-        System.out.println(bitsOf(streamEmpty));
+        System.out.println("Test b: " + bitsOf(stream));
+        System.out.println("Test b empty:" + bitsOf(streamEmpty));
+
+        // Test c
+        List<List<Integer>> listC = List.of(List.of(10, 2, 3), List.of(4, 5, 6), List.of(7, 8, 9));
+        List<List<Integer>> listCEmpty = List.of(List.of());
+        System.out.println("Test c: " + minOf(listC));
+        //System.out.println("Test c empty: " + minOf(listCEmpty));
     }
 }
