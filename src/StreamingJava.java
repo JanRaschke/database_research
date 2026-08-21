@@ -11,13 +11,14 @@ public class StreamingJava {
 
     // Aufgabe 2) a)
     public static <E> Stream<E> flatStreamOf(List<List<E>> list) {
+        // TODO
         return list.stream().flatMap(List::stream);
     }
 
     // Aufgabe 2) b)
     public static int bitsOf(IntStream stream) {
-        // TODO‚
-        return 0;
+        // TODO
+        return stream.reduce(0, (a, b) -> a | b);
     }
 
     // Aufgabe 2) c)
@@ -81,5 +82,9 @@ public class StreamingJava {
         // TODO
         List<List<Integer>> list = List.of(List.of(1, 2, 3), List.of(4, 5, 6), List.of(7, 8, 9));
         System.out.println(flatStreamOf(list).toList());
+        IntStream stream = IntStream.of(1, 2, 3, 4, 5);
+        IntStream streamEmpty = IntStream.of();
+        System.out.println(bitsOf(stream));
+        System.out.println(bitsOf(streamEmpty));
     }
 }
